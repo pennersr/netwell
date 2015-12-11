@@ -13,6 +13,35 @@ class RuleFailedException(Exception):
     pass
 
 
+class Output:
+
+    def __init__(self):
+        self.quiet = False
+        self.line = ''
+        self.line_error = False
+
+    def info(self, text):
+        if not self.quiet or self.line_error:
+            sys.stdout.write(self.line)
+            self.line = ''
+            sys.stdout.write(text)
+            sys.stdout.flush()
+        else:
+            self.line += text
+
+    def error(self, text):
+        self.line_error = True
+        self.info(text)
+
+    def eol(self):
+        self.info('\n')
+        self.line_error = False
+        self.line = ''
+
+
+output = Output()
+
+
 class Outcome:
 
     def __init__(self):
@@ -26,7 +55,7 @@ class Outcome:
 
 @contextmanager
 def rule(description):
-    sys.stdout.write(description + '... ')
+    output.info(description + '... ')
     outcome = Outcome()
     try:
         yield outcome
@@ -36,12 +65,14 @@ def rule(description):
         outcome.fail()
     if outcome.failed:
         if outcome.message:
-            sys.stdout.write('ERROR\nERROR: ' + outcome.message)
+            output.error('ERROR')
+            output.eol()
+            output.error('ERROR: ' + outcome.message)
         else:
-            sys.stdout.write('ERROR\n')
+            output.error('ERROR')
     else:
-        sys.stdout.write('OK')
-    sys.stdout.write('\n')
+        output.info('OK')
+    output.eol()
 
 
 class Checker:

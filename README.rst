@@ -25,3 +25,5 @@ Then, run:
     ERROR: Not valid after 2016-10-13
     Checking that fsf.org resolves to 208.118.235.131... OK
     Checking that www.fsf.org resolves to 208.118.235.131... OK
+
+Use `--quiet` to only output the error messages, if any.
