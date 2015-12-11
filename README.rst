@@ -2,6 +2,17 @@
 Welcome to Netwell!
 ===================
 
+Installation
+============
+
+Python 3 is required::
+
+   $ pip install netwell
+
+
+Quickstart
+==========
+
 Given a netwell checkup file `checks.py`:
 ::
 

@@ -121,7 +121,7 @@ METADATA = dict(
         'python-dateutil'],
     include_package_data=True,
     classifiers=[
-        'Development Status :: 4 - Alpha',
+        'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Environment :: Web Environment',
