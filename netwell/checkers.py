@@ -139,7 +139,9 @@ class Port(Checker):
                     netloc=self.netloc,
                     port=self.port,
                     days=days)) as outcome:
-            cmd = ('openssl s_client -connect {netloc}:{port} </dev/null'
+            cmd = ('openssl s_client'
+                   ' -servername {netloc}'
+                   ' -connect {netloc}:{port} </dev/null'
                    ' 2>/dev/null | openssl x509 -noout -dates'.format(
                        netloc=self.netloc,
                        port=self.port))
