@@ -4,6 +4,13 @@ import sys
 from contextlib import contextmanager
 
 import requests
+from urllib.parse import urlparse
+from dateutil.parser import parse as parse_date
+from datetime import date, timedelta
+
+
+class RuleFailedException(Exception):
+    pass
 
 
 class Outcome:
@@ -14,6 +21,7 @@ class Outcome:
     def fail(self, message=None):
         self.message = message
         self.failed = True
+        raise RuleFailedException()
 
 
 @contextmanager
@@ -22,12 +30,13 @@ def rule(description):
     outcome = Outcome()
     try:
         yield outcome
+    except RuleFailedException:
+        pass
     except:
-        raise
         outcome.fail()
     if outcome.failed:
         if outcome.message:
-            sys.stdout.write('ERROR\nERROR: ' + outcome.message + '\n')
+            sys.stdout.write('ERROR\nERROR: ' + outcome.message)
         else:
             sys.stdout.write('ERROR\n')
     else:
@@ -73,6 +82,56 @@ class URL(Checker):
                 outcome.fail(
                     'got "{title}"'.format(
                         title=title))
+        return self
+
+    def _get_netloc_port(self):
+        parts = urlparse(self.url)
+        netloc, _, port = parts.netloc.partition(':')
+        if not port:
+            if parts.scheme.lower() == 'https':
+                port = 443
+            else:
+                port = 80
+        return netloc, port
+
+
+class Port(Checker):
+
+    def __init__(self, netloc, port):
+        self.netloc = netloc
+        self.port = port
+
+    def ssl_valid_for(self, *, days):
+        with rule(
+                'Checking that SSL at {netloc}:{port}'
+                ' is valid for at least {days} days'.format(
+                    netloc=self.netloc,
+                    port=self.port,
+                    days=days)) as outcome:
+            cmd = ('openssl s_client -connect {netloc}:{port} </dev/null'
+                   ' 2>/dev/null | openssl x509 -noout -dates'.format(
+                       netloc=self.netloc,
+                       port=self.port))
+            not_before = None
+            not_after = None
+            with os.popen(cmd) as f:
+                for line in f.readlines():
+                    key, _, value = line.strip().partition('=')
+                    if key in ['notBefore', 'notAfter']:
+                        value = parse_date(value).date()
+                        if key == 'notBefore':
+                            not_before = value
+                        else:
+                            not_after = value
+            if not not_before or not not_after:
+                outcome.fail('Unable to determine SSL dates')
+            now = date.today()
+            if now < not_before:
+                outcome.fail('Not valid before {}'.format(
+                    not_before))
+            if now + timedelta(days=days) > not_after:
+                outcome.fail('Not valid after {}'.format(
+                    not_after))
         return self
 
 

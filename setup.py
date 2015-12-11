@@ -116,7 +116,9 @@ METADATA = dict(
     url='http://github.com/pennersr/netwell',
     keywords='network ping check test',
     tests_require=[],
-    install_requires=['requests >= 2.0.0'],
+    install_requires=[
+        'requests >= 2.0.0',
+        'python-dateutil'],
     include_package_data=True,
     classifiers=[
         'Development Status :: 4 - Alpha',
