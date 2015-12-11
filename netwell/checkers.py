@@ -46,6 +46,7 @@ class Outcome:
 
     def __init__(self):
         self.failed = False
+        self.message = None
 
     def fail(self, message=None):
         self.message = message
@@ -62,7 +63,7 @@ def rule(description):
     except RuleFailedException:
         pass
     except:
-        outcome.fail()
+        outcome.failed = True
     if outcome.failed:
         if outcome.message:
             output.error('ERROR')
@@ -114,6 +115,14 @@ class URL(Checker):
                     'got "{title}"'.format(
                         title=title))
         return self
+
+    def check_response(self, func):
+        with rule(
+                'Checking that {url} passes {func}'.format(
+                    url=self.url,
+                    func=func.__name__)) as outcome:
+            response = self._fetch()
+            func(response, outcome)
 
     def _get_netloc_port(self):
         parts = urlparse(self.url)
