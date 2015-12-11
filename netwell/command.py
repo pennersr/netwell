@@ -11,7 +11,7 @@ def handle():
         metavar='specfile',
         type=str,
         nargs=1,
-        help='The netvet spec file')
+        help='The netwell spec file')
 
     args = parser.parse_args()
     SourceFileLoader("specfile", args.specfile[0]).load_module()

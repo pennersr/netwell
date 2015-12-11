@@ -101,11 +101,11 @@ package_data = find_package_data(exclude_directories=excluded_directories)
 
 long_description = io.open('README.rst', encoding='utf-8').read()
 
-# Dynamically calculate the version based on netvet.VERSION.
-version = __import__('netvet').__version__
+# Dynamically calculate the version based on netwell.VERSION.
+version = __import__('netwell').__version__
 
 METADATA = dict(
-    name='netvet',
+    name='netwell',
     version=version,
     author='Raymond Penners',
     author_email='raymond.penners@intenct.nl',
@@ -113,7 +113,7 @@ METADATA = dict(
     ' authentication, registration, account management as well as'
     ' 3rd party (social) account authentication.',
     long_description=long_description,
-    url='http://github.com/pennersr/netvet',
+    url='http://github.com/pennersr/netwell',
     keywords='network ping check test',
     tests_require=[],
     install_requires=['requests >= 2.0.0'],
@@ -135,7 +135,7 @@ METADATA = dict(
     package_data=package_data,
     entry_points={
         'console_scripts': [
-            'netvet = netvet.command:handle',
+            'netwell = netwell.command:handle',
         ],
     },
 )

@@ -1,4 +1,4 @@
-from netvet.checkers import URL, DNS
+from netwell.checkers import URL, DNS
 
 URL('http://fsf.org') \
     .redirects_to('http://www.fsf.org/') \
