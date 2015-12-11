@@ -109,9 +109,7 @@ METADATA = dict(
     version=version,
     author='Raymond Penners',
     author_email='raymond.penners@intenct.nl',
-    description='Integrated set of Django applications addressing'
-    ' authentication, registration, account management as well as'
-    ' 3rd party (social) account authentication.',
+    description='Checker to determine if all is well',
     long_description=long_description,
     url='http://github.com/pennersr/netwell',
     keywords='network ping check test',
@@ -129,7 +127,6 @@ METADATA = dict(
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
