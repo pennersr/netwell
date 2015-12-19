@@ -23,7 +23,7 @@ Given a netwell checkup file `checks.py`:
         .title_matches('Free Software Foundation')
     Port('fsf.org', 443).ssl_valid_for(days=3000)
     DNS('fsf.org', 'www.fsf.org').resolves_to('208.118.235.131')
-
+    Path('/').free_space(gb=1)
 
     def custom_check(response, outcome):
         data = response.json()
@@ -43,6 +43,8 @@ Then, run:
     ERROR: Not valid after 2016-10-13
     Checking that fsf.org resolves to 208.118.235.131... OK
     Checking that www.fsf.org resolves to 208.118.235.131... OK
+    Checking that / has 1 GB free space... ERROR
+    ERROR: Only 0.5 GB free
     Checking that http://httpbin.org/get passes custom_check... ERROR
     ERROR: Other data expected
 

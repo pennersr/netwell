@@ -195,3 +195,33 @@ class DNS(Checker):
                 netloc)).read().strip()
             if gip != ip:
                 outcome.fail('got ' + gip)
+
+
+class Path(Checker):
+
+    def __init__(self, path):
+        self.path = path
+
+    def free_space(self, mb=None, gb=None):
+        assert not mb or not gb
+        if mb is not None:
+            unit = 'MB'
+            bytes_per_unit = 1024**2
+        else:
+            unit = 'GB'
+            bytes_per_unit = 1024**3
+        value = mb or gb
+        with rule(
+                'Checking that {path} has {value} {unit} free space'.format(
+                    unit=unit,
+                    path=self.path,
+                    value=value)) as outcome:
+            st = os.statvfs(self.path)
+            free = (st.f_bavail * st.f_frsize)
+            # total = (st.f_blocks * st.f_frsize)
+            # used = (st.f_blocks - st.f_bfree) * st.f_frsize
+            free /= bytes_per_unit
+            if free < value:
+                outcome.fail('Only {free:.1f} {unit} free'.format(
+                    free=free,
+                    unit=unit))
