@@ -6,7 +6,7 @@
 /_/ |_/\___/\__/ |__/|__/\___/_/_/
 """
 
-VERSION = (0, 1, 1, 'final', 0)
+VERSION = (0, 2, 0, 'final', 0)
 
 __title__ = 'netwell'
 __version_info__ = VERSION
