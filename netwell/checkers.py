@@ -88,7 +88,7 @@ class URL(Checker):
 
     def _fetch(self):
         if not self.response:
-            self.response = requests.get(self.url)
+            self.response = requests.get(self.url, timeout=10)
         return self.response
 
     def redirects_to(self, to_url):
