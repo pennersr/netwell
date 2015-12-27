@@ -6,6 +6,7 @@ URL('http://fsf.org') \
 Port('fsf.org', 443).ssl_valid_for(days=3000)
 DNS('fsf.org', 'www.fsf.org').resolves_to('208.118.235.131')
 Path('/').free_space(gb=1)
+Path('/var/log/syslog').modified_within(hours=1)
 
 def custom_check(response, outcome):
     data = response.json()

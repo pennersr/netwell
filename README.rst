@@ -24,6 +24,7 @@ Given a netwell checkup file `checks.py`:
     Port('fsf.org', 443).ssl_valid_for(days=3000)
     DNS('fsf.org', 'www.fsf.org').resolves_to('208.118.235.131')
     Path('/').free_space(gb=1)
+    Path('/var/log/syslog').modified_within(hours=1)
 
     def custom_check(response, outcome):
         data = response.json()
@@ -45,6 +46,7 @@ Then, run:
     Checking that www.fsf.org resolves to 208.118.235.131... OK
     Checking that / has 1 GB free space... ERROR
     ERROR: Only 0.5 GB free
+    Checking that /var/log/syslog was modified after 2015-12-27 22:21:05.873355... OK
     Checking that http://httpbin.org/get passes custom_check... ERROR
     ERROR: Other data expected
 

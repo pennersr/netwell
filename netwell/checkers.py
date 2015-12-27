@@ -6,7 +6,7 @@ from contextlib import contextmanager
 import requests
 from urllib.parse import urlparse
 from dateutil.parser import parse as parse_date
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 
 
 class RuleFailedException(Exception):
@@ -201,6 +201,17 @@ class Path(Checker):
 
     def __init__(self, path):
         self.path = path
+
+    def modified_within(self, **kwargs):
+        after = datetime.now() - timedelta(**kwargs)
+        with rule(
+                'Checking that {path} was modified after {dt}'.format(
+                    path=self.path,
+                    dt=after)) as outcome:
+            t = os.path.getmtime(self.path)
+            dt = datetime.fromtimestamp(t)
+            if dt < after:
+                outcome.fail('Last modified at {}'.format(dt))
 
     def free_space(self, mb=None, gb=None):
         assert not mb or not gb
