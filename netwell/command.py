@@ -22,3 +22,4 @@ def handle():
     args = parser.parse_args()
     checkers.output.quiet = args.quiet
     SourceFileLoader("specfile", args.specfile[0]).load_module()
+    exit(1 if checkers.result.failures else 0)

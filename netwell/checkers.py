@@ -42,6 +42,16 @@ class Output:
 output = Output()
 
 
+class Result:
+
+    def __init__(self):
+        self.failures = 0
+        self.checks = 0
+
+
+result = Result()
+
+
 class Outcome:
 
     def __init__(self):
@@ -59,12 +69,14 @@ def rule(description):
     output.info(description + '... ')
     outcome = Outcome()
     try:
+        result.checks += 1
         yield outcome
     except RuleFailedException:
         pass
     except:
         outcome.failed = True
     if outcome.failed:
+        result.failures += 1
         if outcome.message:
             output.error('ERROR')
             output.eol()
