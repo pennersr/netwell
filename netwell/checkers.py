@@ -128,6 +128,28 @@ class URL(Checker):
                         title=title))
         return self
 
+    def has_header(self, header, value=None):
+        """
+        Checks if the specified header is present. In case a value is
+        provided, it is checked if the value matches.
+        """
+        description = 'Checking that {url} has header "{header}"'
+        if value is not None:
+            description += ': "{value}"'
+        with rule(description.format(
+                url=self.url,
+                header=header,
+                value=value)) as outcome:
+            response = self._fetch()
+            if value is not None:
+                actual_value = response.headers.get(header, '')
+                if actual_value != value:
+                    outcome.fail('got {}'.format(actual_value))
+            else:
+                if header not in response.headers:
+                    outcome.fail('not found')
+        return self
+
     def check_response(self, func):
         with rule(
                 'Checking that {url} passes {func}'.format(
@@ -135,6 +157,7 @@ class URL(Checker):
                     func=func.__name__)) as outcome:
             response = self._fetch()
             func(response, outcome)
+        return self
 
     def _get_netloc_port(self):
         parts = urlparse(self.url)

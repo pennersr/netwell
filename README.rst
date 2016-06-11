@@ -20,7 +20,8 @@ Given a netwell checkup file `checks.py`:
 
     URL('http://fsf.org') \
         .redirects_to('http://www.fsf.org/') \
-        .title_matches('Free Software Foundation')
+        .title_matches('Free Software Foundation') \
+        .has_header('Content-Type', 'text/html;charset=utf-8')
     Port('fsf.org', 443).ssl_valid_for(days=3000)
     DNS('fsf.org', 'www.fsf.org').resolves_to('208.118.235.131')
     Path('/').free_space(gb=1)
@@ -40,6 +41,7 @@ Then, run:
     $ netwell /some/where/checks.py
     Checking that http://fsf.org redirects to http://www.fsf.org/... OK
     Checking that http://fsf.org title matches "Free Software Foundation"... OK
+    Checking that http://fsf.org has header "Content-Type": "text/html;charset=utf-8"... OK
     Checking that SSL at fsf.org:443 is valid for at least 3000 days... ERROR
     ERROR: Not valid after 2016-10-13
     Checking that fsf.org resolves to 208.118.235.131... OK
