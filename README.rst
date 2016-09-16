@@ -16,7 +16,7 @@ Quickstart
 Given a netwell checkup file `checks.py`:
 ::
 
-    from netwell.checkers import URL, DNS, Port
+    from netwell.checkers import URL, DNS, Port, Repo
 
     URL('http://fsf.org') \
         .redirects_to('http://www.fsf.org/') \
@@ -26,6 +26,7 @@ Given a netwell checkup file `checks.py`:
     DNS('fsf.org', 'www.fsf.org').resolves_to('208.118.235.131')
     Path('/').free_space(gb=1)
     Path('/var/log/syslog').modified_within(hours=1)
+    Repo('/home/deploy/src/project').is_clean()
 
     def custom_check(response, outcome):
         data = response.json()
@@ -51,5 +52,8 @@ Then, run:
     Checking that /var/log/syslog was modified after 2015-12-27 22:21:05.873355... OK
     Checking that http://httpbin.org/get passes custom_check... ERROR
     ERROR: Other data expected
+    Checking that repository /home/deploy/src/project is clean... ERROR
+    ERROR: Untracked files found
+
 
 Use `--quiet` to only output the error messages, if any.

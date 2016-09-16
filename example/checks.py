@@ -1,4 +1,4 @@
-from netwell.checkers import URL, DNS, Port, Path
+from netwell.checkers import URL, DNS, Port, Path, Repo
 
 URL('http://fsf.org') \
     .redirects_to('http://www.fsf.org/') \
@@ -8,6 +8,8 @@ Port('fsf.org', 443).ssl_valid_for(days=3000)
 DNS('fsf.org', 'www.fsf.org').resolves_to('208.118.235.131')
 Path('/').free_space(gb=1)
 Path('/var/log/syslog').modified_within(hours=1)
+Repo('/home/deploy/src/project').is_clean()
+
 
 def custom_check(response, outcome):
     data = response.json()

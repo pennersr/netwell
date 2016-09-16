@@ -2,6 +2,7 @@ import os
 import re
 import sys
 from contextlib import contextmanager
+import subprocess
 
 import requests
 from urllib.parse import urlparse
@@ -271,3 +272,38 @@ class Path(Checker):
                 outcome.fail('Only {free:.1f} {unit} free'.format(
                     free=free,
                     unit=unit))
+
+
+class Repo(Checker):
+
+    def __init__(self, path):
+        self.path = path
+
+    def is_clean(self):
+        with rule('Checking that repository {path} is clean'.format(
+                path=self.path)) as outcome:
+            if not os.path.exists(os.path.join(self.path, '.git')):
+                outcome.fail('No repository present')
+            if not self._run_exit_0([
+                    'git', 'diff', '--exit-code']):
+                outcome.fail('Local unstaged changes found')
+            if not self._run_exit_0([
+                    'git', 'diff', '--cached', '--exit-code']):
+                outcome.fail('Uncommitted, staged changes found')
+            if self._has_untracked():
+                outcome.fail('Untracked files found')
+
+    def _has_untracked(self):
+        out = subprocess.check_output(
+            ['git', 'ls-files', '--other', '--exclude-standard',
+             '--directory', '--no-empty-directory'],
+            cwd=self.path)
+        return len(out) > 0
+
+    def _run_exit_0(self, args):
+        try:
+            subprocess.check_output(args, cwd=self.path)
+            ret = True
+        except subprocess.CalledProcessError:
+            ret = False
+        return ret
