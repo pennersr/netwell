@@ -1,5 +1,6 @@
 import os
 import re
+import socket
 import sys
 from contextlib import contextmanager
 import subprocess
@@ -227,10 +228,10 @@ class DNS(Checker):
                 'Checking that {netloc} resolves to {ip}'.format(
                     netloc=netloc,
                     ip=ip)) as outcome:
-            gip = os.popen("dig @8.8.8.8 +short {0} | tail -1".format(
-                netloc)).read().strip()
-            if gip != ip:
-                outcome.fail('got ' + gip)
+            sockets = socket.getaddrinfo(netloc, None)
+            ips = [endpoint[4][0] for endpoint in sockets]
+            if ip not in ips:
+                outcome.fail('got ' + ips)
 
 
 class Path(Checker):
