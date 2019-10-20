@@ -1,11 +1,11 @@
 from netwell.checkers import URL, DNS, Port, Path, Repo
 
 URL('http://fsf.org') \
-    .redirects_to('http://www.fsf.org/') \
+    .redirects_to('https://www.fsf.org/') \
     .title_matches('Free Software Foundation') \
     .has_header('Content-Type', 'text/html;charset=utf-8')
 Port('fsf.org', 443).ssl_valid_for(days=3000)
-DNS('fsf.org', 'www.fsf.org').resolves_to('208.118.235.131')
+DNS('fsf.org', 'www.fsf.org').resolves_to('209.51.188.174')
 Path('/').free_space(gb=1)
 Path('/var/log/syslog').modified_within(hours=1)
 Repo('/home/deploy/src/project').is_clean()
