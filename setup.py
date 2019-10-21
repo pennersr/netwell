@@ -2,10 +2,10 @@
 import io
 import os
 import sys
+from distutils.util import convert_path
 from fnmatch import fnmatchcase
 
-from setuptools import setup, find_packages
-from distutils.util import convert_path
+from setuptools import find_packages, setup
 
 # Provided as an attribute, so you can append to these instead
 # of replicating them:
@@ -130,7 +130,7 @@ METADATA = dict(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
-    packages=find_packages(exclude=['example']),
+    packages=find_packages(exclude=['example', 'tests']),
     package_data=package_data,
     entry_points={
         'console_scripts': [
