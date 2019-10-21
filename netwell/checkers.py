@@ -4,6 +4,7 @@ import socket
 import sys
 from contextlib import contextmanager
 import subprocess
+import ssl
 
 import requests
 from urllib.parse import urlparse
@@ -185,33 +186,38 @@ class Port(Checker):
                     netloc=self.netloc,
                     port=self.port,
                     days=days)) as outcome:
-            cmd = ('openssl s_client'
-                   ' -servername {netloc}'
-                   ' -connect {netloc}:{port} </dev/null'
-                   ' 2>/dev/null | openssl x509 -noout -dates'.format(
-                       netloc=self.netloc,
-                       port=self.port))
-            not_before = None
-            not_after = None
-            with os.popen(cmd) as f:
-                for line in f.readlines():
-                    key, _, value = line.strip().partition('=')
-                    if key in ['notBefore', 'notAfter']:
-                        value = parse_date(value).date()
-                        if key == 'notBefore':
-                            not_before = value
-                        else:
-                            not_after = value
-            if not not_before or not not_after:
-                outcome.fail('Unable to determine SSL dates')
-            now = date.today()
-            if now < not_before:
-                outcome.fail('Not valid before {}'.format(
-                    not_before))
-            if now + timedelta(days=days) > not_after:
-                outcome.fail('Not valid after {}'.format(
-                    not_after))
-        return self
+            try:
+                context = ssl.create_default_context()
+                with socket.create_connection((self.netloc, self.port)) as sock:
+                    with context.wrap_socket(sock, server_hostname=self.netloc) as ssl_sock:
+                        self.cert = ssl_sock.getpeercert()
+            except ssl.SSLError as e:
+                outcome.fail('TLS error: {}'.format(e))
+            else:
+                not_before = self._parse_date(self.cert.get('notBefore'))
+                not_after = self._parse_date(self.cert.get('notAfter'))
+
+                now = datetime.now()
+
+                if not not_before or not not_after:
+                    outcome.fail('Unable to determine SSL dates')
+
+                if now < not_before:
+                    outcome.fail('Not valid before {}'.format(
+                        not_before))
+
+                if now + timedelta(days=days) > not_after:
+                    outcome.fail('Not valid after {}'.format(
+                        not_after))
+
+            return self
+
+    def _parse_date(self, d):
+        for fmt in ['%c', '%b %d %H:%M:%S %Y %Z']:
+            try:
+                return datetime.strptime(d, fmt)
+            except ValueError:
+                pass
 
 
 class DNS(Checker):
