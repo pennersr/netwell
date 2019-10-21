@@ -1,7 +1,7 @@
-from netwell import checkers
 import argparse
-
 from importlib.machinery import SourceFileLoader
+
+from netwell import checkers
 
 
 def handle():

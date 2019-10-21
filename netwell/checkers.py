@@ -1,15 +1,15 @@
 import os
 import re
 import socket
+import ssl
+import subprocess
 import sys
 from contextlib import contextmanager
-import subprocess
-import ssl
+from datetime import date, datetime, timedelta
+from urllib.parse import urlparse
 
 import requests
-from urllib.parse import urlparse
 from dateutil.parser import parse as parse_date
-from datetime import date, timedelta, datetime
 
 
 class RuleFailedException(Exception):
