@@ -23,3 +23,7 @@ def handle():
     checkers.output.quiet = args.quiet
     SourceFileLoader("specfile", args.specfile[0]).load_module()
     exit(1 if checkers.result.failures else 0)
+
+
+if __name__ == "__main__":
+    handle()
