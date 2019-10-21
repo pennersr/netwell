@@ -6,7 +6,7 @@ r"""
 /_/ |_/\___/\__/ |__/|__/\___/_/_/
 """
 
-VERSION = (0, 3, 0, "final", 0)
+VERSION = (0, 4, 0, "final", 0)
 
 __title__ = "netwell"
 __version_info__ = VERSION
@@ -17,4 +17,4 @@ __version__ = ".".join(map(str, VERSION[:3])) + (
 )
 __author__ = "Raymond Penners"
 __license__ = "MIT"
-__copyright__ = "Copyright 2017 Raymond Penners"
+__copyright__ = "Copyright 2017-2019 Raymond Penners"
