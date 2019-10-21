@@ -2,6 +2,22 @@
 Welcome to Netwell!
 ===================
 
+.. image:: https://badge.fury.io/py/netwell.svg
+   :target: http://badge.fury.io/py/netwell
+
+.. image:: https://travis-ci.org/pennersr/netwell.svg
+   :target: http://travis-ci.org/pennersr/netwell
+
+.. image:: https://img.shields.io/pypi/v/netwell.svg
+   :target: https://pypi.python.org/pypi/netwell
+
+.. image:: https://pennersr.github.io/img/bitcoin-badge.svg
+   :target: https://blockchain.info/address/1AJXuBMPHkaDCNX2rwAy34bGgs7hmrePEr
+
+.. image:: https://img.shields.io/badge/code%20style-pep8-green.svg
+   :target: https://www.python.org/dev/peps/pep-0008/
+
+
 Installation
 ============
 
