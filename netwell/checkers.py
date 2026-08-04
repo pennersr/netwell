@@ -118,7 +118,9 @@ class URL(Checker):
             )
         ) as outcome:
             response = self._fetch()
-            m = re.search("title>(?P<title>[^<]+)</ti", response.text)
+            m = re.search(
+                "<title[^>]*>(?P<title>[^<]+)</title>", response.text, re.I
+            )
             title = m.group("title").strip()
             if not re.search(pattern, title, re.I):
                 outcome.fail('got "{title}"'.format(title=title))
